@@ -1,0 +1,8 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need zip
+TS="$(date +%Y%m%d_%H%M%S)"
+OUT="$HOME/termux_home_$TS.zip"
+zip -r "$OUT" "$HOME" -x "$HOME/.cache/*" "$HOME/.git/*" >/dev/null 2>&1 || true
+color green "[+] Backup: $OUT"
+log "termux_backup_home out=$OUT"

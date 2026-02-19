@@ -1,0 +1,8 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need ping
+color blue "[*] Network diagnostics"
+echo "--- IP ---"; ip addr 2>/dev/null || true
+echo "--- DNS test ---"; ping -c 2 -W 2 google.com || true
+echo "--- IP test ---";  ping -c 2 -W 2 1.1.1.1 || true
+log "net_diag ran"

@@ -1,0 +1,13 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need python
+FILE="${1:-}"
+KEY="${2:-}"
+[[ -z "$FILE" || -z "$KEY" ]] && die "Usage: json_filter <file.json> <key>"
+python - <<PY
+import json
+with open("$FILE") as f:
+    data = json.load(f)
+print(data.get("$KEY"))
+PY
+log "json_filter file=$FILE key=$KEY"

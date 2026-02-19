@@ -1,0 +1,11 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need curl
+URL="${1:-}"
+INTERVAL="${2:-10}"
+[[ -z "$URL" ]] && die "Usage: endpoint_monitor <url> [seconds]"
+while true; do
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+  echo "$(date) -> $STATUS"
+  sleep "$INTERVAL"
+done
