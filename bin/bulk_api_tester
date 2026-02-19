@@ -1,0 +1,29 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need curl
+
+LIST_FILE="${1:-}"
+[[ -z "$LIST_FILE" ]] && die "Usage: bulk_api_tester <file_with_urls>"
+
+[[ ! -f "$LIST_FILE" ]] && die "File not found."
+
+TS=$(date +%Y%m%d_%H%M%S)
+OUT="api_report_$TS.txt"
+
+echo "Bulk API Test Report"
+echo "Generated: $(date)"
+echo "----------------------------------------" > "$OUT"
+
+while IFS= read -r URL; do
+  [[ -z "$URL" ]] && continue
+
+  RESPONSE=$(curl -o /dev/null -s -w "%{http_code} %{time_total}" "$URL")
+  STATUS=$(echo "$RESPONSE" | awk '{print $1}')
+  TIME=$(echo "$RESPONSE" | awk '{print $2}')
+
+  printf "%-40s | %3s | %ss\n" "$URL" "$STATUS" "$TIME" | tee -a "$OUT"
+
+done < "$LIST_FILE"
+
+echo "----------------------------------------" | tee -a "$OUT"
+echo "Saved to: $OUT"
