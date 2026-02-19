@@ -1,0 +1,11 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need curl
+URL="${1:-}"
+DATA="${2:-}"
+[[ -z "$URL" ]] && die "Usage: webhook_send <url> [json_string]"
+curl -sS -X POST "$URL" \
+  -H "Content-Type: application/json" \
+  -d "${DATA:-{\"message\":\"test\"}}" \
+  -w "\ncode=%{http_code}\n"
+log "webhook_send url=$URL"

@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need curl
+URL="${1:-}"
+[[ -z "$URL" ]] && die "Usage: api_latency <url>"
+curl -o /dev/null -s -w "dns=%{time_namelookup}s connect=%{time_connect}s starttransfer=%{time_starttransfer}s total=%{time_total}s\n" "$URL"
+log "api_latency url=$URL"

@@ -1,0 +1,3 @@
+https://api.github.com
+https://google.com
+https://httpbin.org/status/404

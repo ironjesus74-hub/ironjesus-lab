@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need curl
+URL="${1:-}"
+[[ -z "$URL" ]] && die "Usage: header_test <url>"
+curl -I "$URL"
+log "header_test url=$URL"
