@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need zip
+DIR="${1:-.}"
+NAME="${2:-project}"
+TS="$(date +%Y%m%d_%H%M%S)"
+OUT="$HOME/${NAME}_${TS}.zip"
+zip -r "$OUT" "$DIR" -x "*.git*" "*node_modules*" "*__pycache__*" >/dev/null
+color green "[+] Saved: $OUT"
+log "zip_project dir=$DIR out=$OUT"
