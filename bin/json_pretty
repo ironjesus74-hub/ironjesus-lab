@@ -1,0 +1,15 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need python
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  echo "Usage: json_pretty [file.json]"
+  echo "If no file is provided, reads from stdin."
+  exit 0
+fi
+python - <<'PY'
+import sys, json
+data = sys.stdin.read() if len(sys.argv)==1 else open(sys.argv[1],'r',encoding='utf-8').read()
+obj = json.loads(data)
+print(json.dumps(obj, indent=2, ensure_ascii=False))
+PY
+log "json_pretty ran"

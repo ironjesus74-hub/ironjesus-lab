@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+need curl
+URL="${1:-}"
+[[ -z "$URL" ]] && die "Usage: http_status <url>"
+curl -sS -o /dev/null -w "code=%{http_code} time_total=%{time_total}s\n" "$URL" || die "request failed"
+log "http_status url=$URL"

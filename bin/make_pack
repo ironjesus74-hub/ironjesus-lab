@@ -1,0 +1,34 @@
+#!/data/data/com.termux/files/usr/bin/bash
+set -euo pipefail
+ROOT="$HOME/ironjesus-lab"
+PACK="${1:-}"
+shift || true
+[[ -z "$PACK" ]] && { echo "Usage: make_pack <pack-name> <script1> <script2> ..."; exit 1; }
+[[ "$#" -lt 1 ]] && { echo "Add at least one script from bin/"; exit 1; }
+
+OUTDIR="$ROOT/packs/$PACK"
+mkdir -p "$OUTDIR/bin"
+rm -f "$OUTDIR/bin/"* 2>/dev/null || true
+
+for s in "$@"; do
+  [[ -f "$ROOT/bin/$s" ]] || { echo "Missing: $ROOT/bin/$s"; exit 1; }
+  cp "$ROOT/bin/$s" "$OUTDIR/bin/"
+done
+
+cat > "$OUTDIR/README.md" <<EOF
+# $PACK
+
+## Included scripts
+$(for s in "$@"; do echo "- \`$s\`"; done)
+
+## Install (Termux)
+1) Copy scripts into a folder in your PATH (example: \$HOME/bin)
+2) chmod +x the scripts
+3) Run them from terminal
+
+EOF
+
+TS="$(date +%Y%m%d_%H%M%S)"
+cd "$ROOT/packs"
+zip -r "$ROOT/${PACK}_${TS}.zip" "$PACK" >/dev/null
+echo "Built: $ROOT/${PACK}_${TS}.zip"

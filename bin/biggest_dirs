@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+DIR="${1:-$HOME}"
+N="${2:-15}"
+color blue "[*] Biggest directories under: $DIR"
+du -h "$DIR" 2>/dev/null | sort -hr | head -n "$N"
+log "biggest_dirs dir=$DIR n=$N"

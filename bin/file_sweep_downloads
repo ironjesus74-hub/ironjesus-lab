@@ -1,0 +1,23 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+DL="$HOME/storage/downloads"
+[[ -d "$DL" ]] || die "Downloads folder not found. Try: termux-setup-storage"
+mkdir -p "$DL"/{images,video,audio,archives,docs,apks,other}
+
+shopt -s nullglob
+move_group () { local pat="$1" dst="$2"; local files=($DL/$pat); [[ ${#files[@]} -gt 0 ]] && mv -n "${files[@]}" "$DL/$dst/"; }
+
+move_group "*.jpg" images; move_group "*.jpeg" images; move_group "*.png" images; move_group "*.gif" images; move_group "*.webp" images
+move_group "*.mp4" video; move_group "*.mkv" video; move_group "*.mov" video
+move_group "*.mp3" audio; move_group "*.wav" audio; move_group "*.m4a" audio
+move_group "*.zip" archives; move_group "*.7z" archives; move_group "*.rar" archives; move_group "*.tar" archives; move_group "*.gz" archives
+move_group "*.pdf" docs; move_group "*.txt" docs; move_group "*.md" docs; move_group "*.doc" docs; move_group "*.docx" docs
+move_group "*.apk" apks
+
+# everything else (optional, comment out if you don't want this behavior)
+for f in "$DL"/*; do
+  [[ -f "$f" ]] && mv -n "$f" "$DL/other/" 2>/dev/null || true
+done
+
+color green "[+] Swept Downloads into folders."
+log "file_sweep_downloads ran"

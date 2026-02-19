@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/bash
+source "$HOME/ironjesus-lab/lib/common.sh"
+SECS="${1:-5}"
+shift || true
+[[ "$#" -lt 1 ]] && die "Usage: watch_command <seconds> <command...>"
+while true; do
+  color blue "=== $(date) ==="
+  "$@" || true
+  sleep "$SECS"
+done
