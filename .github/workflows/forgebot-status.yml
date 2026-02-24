@@ -1,0 +1,67 @@
+name: ForgeBot Status Publish
+
+on:
+  workflow_run:
+    workflows: ["ForgeBot - Daily Operator Drop"]
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: forgebot-status
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install jq
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+
+      - name: Write status JSON
+        shell: bash
+        env:
+          STATUS: ${{ github.event.workflow_run.status }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          UPDATED_AT: ${{ github.event.workflow_run.updated_at }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p .status
+          jq -n \
+            --arg workflow "ForgeBot - Daily Operator Drop" \
+            --arg status "${STATUS:-unknown}" \
+            --arg conclusion "${CONCLUSION:-unknown}" \
+            --arg run_id "${RUN_ID:-}" \
+            --arg run_url "${RUN_URL:-}" \
+            --arg updated_at "${UPDATED_AT:-}" \
+            --arg head_branch "${HEAD_BRANCH:-}" \
+            --arg head_sha "${HEAD_SHA:-}" \
+            '{workflow:$workflow,status:$status,conclusion:$conclusion,run_id:$run_id,run_url:$run_url,updated_at:$updated_at,head_branch:$head_branch,head_sha:$head_sha}' \
+            > .status/forgebot.json
+
+      - name: Commit + push if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .status/forgebot.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore(status): update forgebot status"
+          git push
