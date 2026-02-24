@@ -25,18 +25,18 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install validators + gh
+      - name: Install validators
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update -y
-          sudo apt-get install -y shellcheck gh
+          sudo apt-get install -y shellcheck
 
       - name: Generate
         shell: bash
         run: |
           set -euo pipefail
-          python3 generator/forgebot.py generate --out .forgebot/last.json
+          python3 generator/forgebot.py --out .forgebot/last.json
 
       - name: Validate
         shell: bash
@@ -70,4 +70,4 @@ jobs:
           git commit -m "forgebot: $TITLE" || exit 0
           git push -u origin "$BRANCH"
 
-          gh pr create --title "$TITLE" --body-file "$BODY_FILE" --base "$BASE" --head "$BRANCH" --label "forgebot" || true
+          gh pr create --title "$TITLE" --body-file "$BODY_FILE" --base "$BASE" --head "$BRANCH" || true
