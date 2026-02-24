@@ -32,7 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -y
-          sudo apt-get install -y shellcheck
+          sudo apt-get install -y shellcheck gh
 
       - name: Generate
         shell: bash
@@ -60,7 +60,9 @@ jobs:
           BASE="$(git remote show origin 2>/dev/null | awk '/HEAD branch/ {print $NF}' || true)"
           [ -n "${BASE:-}" ] || BASE="main"
 
-          BRANCH="$(python3 -c 'import json;print(json.load(open(".forgebot/last.json"))["branch"])')"
+          BRANCH_RAW="$(python3 -c 'import json;print(json.load(open(".forgebot/last.json"))["branch"])')"
+          BRANCH="${BRANCH_RAW}-${GITHUB_RUN_ID}"
+
           TITLE="$(python3 -c 'import json;print(json.load(open(".forgebot/last.json"))["title"])')"
           BODY_FILE="$(python3 -c 'import json;print(json.load(open(".forgebot/last.json"))["body_file"])')"
 
