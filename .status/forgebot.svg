@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="220" viewBox="0 0 980 220">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070b14"/>
+      <stop offset="100%" stop-color="#111a33"/>
+    </linearGradient>
+    <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7d89ff"/>
+      <stop offset="50%" stop-color="#2ee59d"/>
+      <stop offset="100%" stop-color="#ff4d4d"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+      <feOffset in="blur" dx="0" dy="6" result="off"/>
+      <feColorMatrix in="off" type="matrix"
+        values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0.45 0" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect x="10" y="10" width="960" height="200" rx="18" fill="url(#bg)" filter="url(#softShadow)"/>
+  <rect x="10" y="10" width="960" height="200" rx="18" fill="none" stroke="url(#stroke)" stroke-width="2"/>
+
+  <text x="38" y="58" font-family="ui-sans-serif,system-ui,Segoe UI,Roboto,Arial" font-size="22" fill="#e8eeff" font-weight="700">
+    FORGEBOT LIVE STATUS
+  </text>
+  <text x="38" y="84" font-family="ui-sans-serif,system-ui,Segoe UI,Roboto,Arial" font-size="13" fill="#9fb0ff">
+    Built Different · forge-atlas.io
+  </text>
+
+  <circle cx="900" cy="54" r="8" fill="#7d89ff"/>
+  <text x="920" y="58" font-family="ui-sans-serif,system-ui,Segoe UI,Roboto,Arial" font-size="12" fill="#cfd8ff">
+    NO RUN DATA YET
+  </text>
+
+  <text x="38" y="122" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#cfd8ff">
+    workflow: ForgeBot - Daily Operator Drop
+  </text>
+  <text x="38" y="146" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#cfd8ff">
+    branch:    sha: 
+  </text>
+  <text x="38" y="170" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#cfd8ff">
+    updated: 
+  </text>
+
+  <text x="38" y="198" font-family="ui-sans-serif,system-ui,Segoe UI,Roboto,Arial" font-size="12" fill="#9fb0ff">
+    source: https://github.com/ironjesus74-hub/ironjesus-lab/actions/workflows/forgebot.yml
+  </text>
+</svg>
