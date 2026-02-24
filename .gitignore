@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.forgebot/last.json
+.forgebot/pr_body.md

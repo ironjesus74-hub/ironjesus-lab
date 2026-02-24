@@ -16,6 +16,8 @@ concurrency:
 jobs:
   forgebot:
     runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v5
         with:
@@ -36,7 +38,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 generator/forgebot.py --out .forgebot/last.json
+          python3 -B generator/forgebot.py --out .forgebot/last.json
 
       - name: Validate
         shell: bash
