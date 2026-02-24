@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# __TITLE__ | __DESC__
+# Built Different — __WEBSITE__ | __DATE_UTC__
+
+have(){ command -v "$1" >/dev/null 2>&1; }
+
+echo "atlas_title=__TITLE__"
+echo "atlas_tool_id=__TOOL_ID__"
+echo "atlas_created_utc=__DATE_UTC__"
+echo "atlas_site=__WEBSITE__"
+echo "atlas_github=__GITHUB__"
+echo
+echo "uname=$(uname -a 2>/dev/null || true)"
+if have df; then echo "disk_root=$(df -h / 2>/dev/null | tail -n 1 | awk '{print $2" total, "$4" free"}')"; fi
+for t in git python3 node npm docker kubectl terraform; do
+  if have "$t"; then echo "tool_${t}=$("$t" --version 2>/dev/null | head -n 1 || true)"; else echo "tool_${t}=missing"; fi
+done

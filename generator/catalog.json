@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "id": "op-env-audit-001",
+      "slug": "atlas-env-audit",
+      "title": "Atlas Env Audit",
+      "desc": "Local environment inventory (OS/CPU/disk + tool versions) with safe output.",
+      "lang": "bash",
+      "template": "atlas-env-audit.sh.tmpl"
+    },
+    {
+      "id": "op-repo-health-001",
+      "slug": "atlas-repo-health",
+      "title": "Atlas Repo Health",
+      "desc": "Repository hygiene audit (missing docs, big files, quick output).",
+      "lang": "python",
+      "template": "atlas-repo-health.py.tmpl"
+    }
+  ]
+}

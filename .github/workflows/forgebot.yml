@@ -1,0 +1,73 @@
+name: ForgeBot - Daily Operator Drop
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: forgebot
+  cancel-in-progress: false
+
+jobs:
+  forgebot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validators + gh
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y shellcheck gh
+
+      - name: Generate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 generator/forgebot.py generate --out .forgebot/last.json
+
+      - name: Validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -d tools ]; then
+            find tools -type f -name '*.sh' -print0 | xargs -0 -r shellcheck -x
+          fi
+          if git ls-files '*.py' | grep -q .; then
+            git ls-files '*.py' | xargs -r python3 -m py_compile
+          fi
+
+      - name: Branch + PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="$(git remote show origin 2>/dev/null | awk '/HEAD branch/ {print $NF}' || true)"
+          [ -n "${BASE:-}" ] || BASE="main"
+
+          BRANCH="$(python3 -c 'import json;print(json.load(open(".forgebot/last.json"))["branch"])')"
+          TITLE="$(python3 -c 'import json;print(json.load(open(".forgebot/last.json"))["title"])')"
+          BODY_FILE="$(python3 -c 'import json;print(json.load(open(".forgebot/last.json"))["body_file"])')"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "forgebot: $TITLE" || exit 0
+          git push -u origin "$BRANCH"
+
+          gh pr create --title "$TITLE" --body-file "$BODY_FILE" --base "$BASE" --head "$BRANCH" --label "forgebot" || true
