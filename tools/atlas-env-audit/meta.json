@@ -1,0 +1,9 @@
+{
+  "created_utc": "2026-02-27T06:08:10.512371Z",
+  "desc": "Local environment inventory (OS/CPU/disk + tool versions) with safe output.",
+  "id": "op-env-audit-001",
+  "lang": "bash",
+  "slug": "atlas-env-audit",
+  "title": "Atlas Env Audit",
+  "website": "https://forge-atlas.io"
+}
